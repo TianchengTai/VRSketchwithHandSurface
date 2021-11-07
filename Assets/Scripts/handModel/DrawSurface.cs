@@ -203,53 +203,19 @@ public class DrawSurface : MonoBehaviour
     GameObject CreateSurface(GestureType gesture) {
         switch (gesture) {
             case GestureType.ping:
-                //List<CP> cpList11 = new List<CP>();
-                //cpList11.Add(new CP(indexJoints[0], 1));
-                //cpList11.Add(new CP(indexJoints[3], 1));
-
-                //List<CP> cpList12 = new List<CP>();
-                //cpList12.Add(new CP(indexJoints[3], 1));
-                //cpList12.Add(new CP(otherJoints[3], 1));
-
                 GameObject plane;
-                // Pipeline.PanAndRender(out plane, cpList11, cpList12, 2, 2, false, false);
                 plane = CreatePlane();
                 InitSurface(plane, "Plane", Color.grey);
                 return plane;
                 break;
             case GestureType.qu:
-                //List<CP> cpList21 = new List<CP>();
-                //foreach (Vector3 indexJoint in indexJoints) {
-                //    cpList21.Add(new CP(indexJoint, 1));
-                //}
-
-                //List<CP> cpList22 = new List<CP>();
-                //cpList22.Add(new CP(indexJoints[3], 1));
-                //cpList22.Add(new CP(otherJoints[3], 1));
-
                 GameObject surface;
-                //Pipeline.PanAndRender(out surface, cpList21, cpList22, 2, 2, false, false);
                 surface = CreateQuMian();
                 InitSurface(surface, "Surface", Color.grey);
                 return surface;
                 break;
             case GestureType.zhu:
                 GameObject cylinder;
-                //List<Vector3> line31 = new List<Vector3>();
-                //line31.Add(indexJoints[2]);
-                //line31.Add(thumbJoints[2]);
-
-                //List<Vector3> line32 = new List<Vector3>();
-                //line32.Add(indexJoints[3]);
-                //line32.Add(thumbJoints[1]);
-
-                //Vector3 center3 = (indexJoints[2] + thumbJoints[2]) / 2;
-                //Vector3 axis3 = indexJoints[2] - otherJoints[2];
-                //List<CP> cpList3 = new List<CP>();
-                //cpList3.Add(new CP(indexJoints[2] - center3, 1));
-                //cpList3.Add(new CP(otherJoints[2] - center3, 1));
-                //float angle3 = 360;
-                //Pipeline.RotateAndRender(out cylinder, cpList3, axis3, angle3, 2, 2, false);//旋转角
                 cylinder = CreateCylinder();
                 InitSurface(cylinder, "Cone", Color.grey);
                 return cylinder;
@@ -257,22 +223,6 @@ public class DrawSurface : MonoBehaviour
                 break;
             case GestureType.zhui:
                 GameObject cone;
-                ////三个点确定锥面
-                //Vector3 pointA = thumbJoints[2];
-                //Vector3 pointB = indexJoints[2];
-                //Vector3 pointC = otherJoints[1];//可以改成otherJoints[1]
-                //Vector3 ABCenter = (pointA + pointB) / 2;    //AB中点
-
-                //float angelBetween = Vector3.Angle(pointB - pointA, pointC - pointB) / 180 * Mathf.PI; //两向量夹角
-                //if (angelBetween == 0) {
-                //    return null;  //俩向量垂直时无法生成
-                //}
-                //Vector3 pointD = pointB - (Vector3.Distance(pointA, pointB) / 2) / Mathf.Cos(angelBetween) * ((pointC - pointB) / Vector3.Distance(pointB, pointC));   //锥顶坐标
-                //Vector3 center4 = ABCenter;
-                //List<CP> cpList = new List<CP>() { new CP(pointD - center4, 1), new CP(pointC - center4, 1) }; //去中心化
-                //Vector3 axis4 = pointD - ABCenter;  //轴的方向向量
-                //float angle4 = 360;//旋转角
-                //Pipeline.RotateAndRender(out cone, cpList, axis4, angle4, 2, 2, false);
                 cone = CreateCone();
                 InitSurface(cone, "Cone", Color.grey);
                 return cone;

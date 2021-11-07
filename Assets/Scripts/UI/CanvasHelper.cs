@@ -17,19 +17,22 @@ public class CanvasHelper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Menu.GetStateDown(pose.inputSource)) {
-            GameObject MainPanel = transform.Find("MainPanel").gameObject;
-            if (!MainPanel.activeSelf) {
-                MainPanel.SetActive(true);
-                transform.position = GameObject.Find("Camera").transform.position + transform.forward;
-                transform.rotation = GameObject.Find("Camera").transform.rotation;
-                GameObject controller = GameObject.Find("Controller (right)");
-                controller.GetComponent<VRPaintController>().enabled = false;
-                //ActionState lastAction = GetComponent<GlobalState>().action;
-                //MainPanel.GetComponent<PanelSwitch>().SetLastAction(lastAction);
-                //GetComponent<GlobalState>().SetAction(ActionState.UI);
-            }
-        }
+        // //输入菜单键打开菜单同时禁用画图功能
+        // if (Menu.GetStateDown(pose.inputSource)) {
+        //     GameObject MainPanel = transform.Find("MainPanel").gameObject;
+        //     if (!MainPanel.activeSelf) {
+        //         MainPanel.SetActive(true);
+        //         transform.position = GameObject.Find("Camera").transform.position + transform.forward;
+        //         transform.rotation = GameObject.Find("Camera").transform.rotation;
+        //         GameObject controller = GameObject.Find("Controller (right)");
+        //         controller.GetComponent<VRPaintController>().enabled = false;
+        //         //ActionState lastAction = GetComponent<GlobalState>().action;
+        //         //MainPanel.GetComponent<PanelSwitch>().SetLastAction(lastAction);
+        //         //GetComponent<GlobalState>().SetAction(ActionState.UI);
+        //     }
+        // }
+
+        //输入侧键切换笔画类型
         if (LeftBtn.GetStateDown(pose.inputSource))
         {
             GlobalState gs = GetComponent<GlobalState>();
