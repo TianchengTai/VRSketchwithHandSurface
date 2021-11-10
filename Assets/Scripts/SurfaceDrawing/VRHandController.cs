@@ -44,11 +44,11 @@ namespace VRPainting {
 
         void Update() {
             HandleUndoRedo();
+            //MouseFollow();
             ControllerFollow();
             UpdateLineInfo();
             PointerHighlight();
             SetTransparent();
-            SetLocked();
 
             if (global.action == ActionState.PAINT) {
                 DrawOneLine();
@@ -66,16 +66,11 @@ namespace VRPainting {
             }
         }
 
-        /*
-        设置全部透明
-        */
         private void SetTransparent() {
             if(menu.GetStateDown(pose.inputSource))
                 selectModel.transparent = !selectModel.transparent;
-        }
-
-        private void SetLocked(){
             if (UpPress.GetStateDown(pose.inputSource)) {
+                Debug.Log("ahhhhhhhh");
                 if (hitObject != null) {
                     InteractionBehaviour IB = hitObject.GetComponent<InteractionBehaviour>();
                     ManipulationHand MH= hitObject.GetComponent<ManipulationHand>();
@@ -188,9 +183,7 @@ namespace VRPainting {
 
         }
 
-        /*
-        高亮指向物体并且获取物体引用
-        */
+
         void PointerHighlight() {
             selectModel.SetMaterial();
             if (hitObject != null) {
@@ -198,9 +191,7 @@ namespace VRPainting {
             }
         }
 
-        /*
-        处理撤销和重做
-        */
+
         void HandleUndoRedo() {
             if (maxUndoStored != UndoRedoManager.maxUndoStored) { UndoRedoManager.maxUndoStored = maxUndoStored; }
 
@@ -214,17 +205,12 @@ namespace VRPainting {
 
 
 
-        /*
-        更新颜色和粗细
-        */
+
         void UpdateLineInfo() {
             lineInfo.width = slider.value;
             lineInfo.color = colorBar.color;
         }
 
-        /*
-        获取手柄的坐标
-        */
         void ControllerFollow() {
             ControllerPosition = transform.position + transform.forward * dist;
             Ray raycast = new Ray(transform.position, transform.forward);
