@@ -25,13 +25,8 @@ namespace VRPainting
         }
 
 
-        // 第一个落点
-        Vector3 startp;
-
-        // 第一个控制器点
-        Vector3 controllerStartp;
-
         // 当前的line
+        Vector3 startp;
         GameObject curr;
 
 
@@ -46,7 +41,6 @@ namespace VRPainting
                 GameObject point;
                 LineRenderer line;
                 startp = position;
-                controllerStartp = transform.position;
                 point = new GameObject();
                 line = point.AddComponent<LineRenderer>();
                 InitLineRenderer(line);
@@ -124,16 +118,14 @@ namespace VRPainting
                 LineRenderer lineRenderer = curr.GetComponent<LineRenderer>() ?? curr.AddComponent<LineRenderer>();
                 lineRenderer.positionCount = 0;
                 Vector3 endPoint = position;
-                Vector3 controllerEndp = transform.position;
-                //Camera VRcamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+                Camera VRcamera = GameObject.Find("Main Camera").GetComponent<Camera>();
                 float distance = Vector3.Distance(startp, endPoint)* 32;
                 for (int i = 0; i < distance; i++)
                 {
                     Vector3 tmpPoint = Vector3.Lerp(startp, endPoint, i / distance);
-                    Vector3 tmpCtrPoint = Vector3.Lerp(controllerStartp,controllerEndp,i/distance);
                     Vector3 tmpPointInWorld = Vector3.zero;
                     //Ray ray = VRcamera.ScreenPointToRay(tmpPoint);
-                    Ray ray = new Ray(tmpCtrPoint, (tmpPoint - tmpCtrPoint).normalized);
+                    Ray ray = new Ray(VRcamera.transform.position, (tmpPoint - VRcamera.transform.position).normalized);
                     RaycastHit hit;//
                     if (Physics.Raycast(ray, out hit, 1000 , 1 << LayerMask.NameToLayer("hidden_surface")))
                     {
