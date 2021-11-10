@@ -124,7 +124,7 @@ namespace VRPainting
                 if (child.gameObject.name != "Default")
                 {
                     Material mat = new Material(Shader.Find("Standard"));
-                    SetMaterialRenderingMode(mat, RenderingMode.Transparent);
+                    SetMaterialRenderingMode(mat, RenderingMode.Fade);
                     mat.color = new Color(1, 1, 1, HIDDEN);
                     child.gameObject.GetComponent<MeshRenderer>().material = mat;
                     child.gameObject.layer = LayerMask.NameToLayer(HiddenLayer);
