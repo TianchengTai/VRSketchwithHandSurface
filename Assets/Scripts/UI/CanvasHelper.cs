@@ -17,19 +17,19 @@ public class CanvasHelper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Menu.GetStateDown(pose.inputSource)) {
-            GameObject MainPanel = transform.Find("MainPanel").gameObject;
-            if (!MainPanel.activeSelf) {
-                MainPanel.SetActive(true);
-                transform.position = GameObject.Find("Camera").transform.position + transform.forward;
-                transform.rotation = GameObject.Find("Camera").transform.rotation;
-                GameObject controller = GameObject.Find("Controller (right)");
-                controller.GetComponent<VRPaintController>().enabled = false;
-                //ActionState lastAction = GetComponent<GlobalState>().action;
-                //MainPanel.GetComponent<PanelSwitch>().SetLastAction(lastAction);
-                //GetComponent<GlobalState>().SetAction(ActionState.UI);
-            }
-        }
+        //if (Menu.GetStateDown(pose.inputSource)) {
+        //    GameObject MainPanel = transform.Find("MainPanel").gameObject;
+        //    if (!MainPanel.activeSelf) {
+        //        MainPanel.SetActive(true);
+        //        transform.position = GameObject.Find("Camera").transform.position + transform.forward;
+        //        transform.rotation = GameObject.Find("Camera").transform.rotation;
+        //        GameObject controller = GameObject.Find("Controller (right)");
+        //        controller.GetComponent<VRPaintController>().enabled = false;
+        //        //ActionState lastAction = GetComponent<GlobalState>().action;
+        //        //MainPanel.GetComponent<PanelSwitch>().SetLastAction(lastAction);
+        //        //GetComponent<GlobalState>().SetAction(ActionState.UI);
+        //    }
+        //}
         if (LeftBtn.GetStateDown(pose.inputSource))
         {
             GlobalState gs = GetComponent<GlobalState>();
