@@ -12,13 +12,13 @@ namespace VRPainting
 
         public bool transparent = false;
 
-        Material mt; //材质
+        Material mt; //????
 
-        public float SELECTED = 0.6f;  // 选中的透明度
+        public float SELECTED = 0.6f;  // ??е??????
 
-        public float MIDDLE = 0.2f;    // 鼠标移到上面透明度
+        public float MIDDLE = 0.2f;    // ???????????????
 
-        public float HIDDEN = 0.2f;    // 未选中的透明度
+        public float HIDDEN = 0.2f;    // δ??е??????
 
         string HiddenLayer = "hidden_surface";
 
@@ -59,7 +59,7 @@ namespace VRPainting
         //            ClearAllLayer();
         //            hitInfo.transform.gameObject.layer = LayerMask.NameToLayer(SelectedLayer);
         //        }
-        //        // 设置material
+        //        // ????material
         //        SetMaterial();
         //        HighlightGameObject(hitInfo.transform.gameObject);
         //    }
@@ -102,16 +102,11 @@ namespace VRPainting
                 Material mat = child.gameObject.GetComponent<MeshRenderer>().material;
                 if (transparent) {
                     mat.color = new Color(1, 1, 1, 0);
-                    Target = null;
                     continue;
                 }
                 if (child.gameObject.layer == LayerMask.NameToLayer(HiddenLayer))
                 {
                     mat.color = new Color(1, 1, 1, HIDDEN);
-                }
-                else if (child.gameObject.layer == LayerMask.NameToLayer(SelectedLayer))
-                {
-                    mat.color = new Color(1, 1, 1, SELECTED);
                 }
             }
         }
