@@ -6,6 +6,7 @@ namespace VRPainting
 {
     public class SelectModel : MonoBehaviour
     {
+        public static List<GameObject> SurfaceContainer;
         public GameObject Target;
 
         public string planeName;
@@ -14,20 +15,21 @@ namespace VRPainting
 
         Material mt; //????
 
-        public float SELECTED = 0.6f;  // ??§Ö??????
+        public float SELECTED = 0.6f;  // ??ï¿½ï¿½??????
 
         public float MIDDLE = 0.2f;    // ???????????????
 
-        public float HIDDEN = 0.2f;    // ¦Ä??§Ö??????
+        public float HIDDEN = 0.2f;    // ï¿½ï¿½??ï¿½ï¿½??????
 
         string HiddenLayer = "hidden_surface";
 
         string SelectedLayer = "selected_surface";
 
         private void Start()
-        {
+        {   
+            SurfaceContainer = new List<GameObject>();
             Physics.queriesHitBackfaces = true;
-            initMaterials();
+            //initMaterials();
         }
 
 
@@ -36,38 +38,13 @@ namespace VRPainting
             Target = hitObject;
             planeName = hitObject.name;
             ClearAllLayer();
-            hitObject.layer = LayerMask.NameToLayer(SelectedLayer);
+            //hitObject.layer = LayerMask.NameToLayer(SelectedLayer);
         }
 
-
-        //public void SelectAndHighlight(Ray ray,float dist)
-        //{
-        //    RaycastHit hitInfo;
-        //    if (Physics.Raycast(ray, out hitInfo, dist, LayerMask.GetMask(SelectedLayer, HiddenLayer)))
-        //    {
-        //        if (Input.GetMouseButtonDown(0))
-        //        {
-        //            //if (Target == hitInfo.transform.gameObject)
-        //            //{
-        //            //    Target = null;
-        //            //    ClearAllLayer();
-        //            //    SetMaterial();
-        //            //    return;
-        //            //}
-        //            Target = hitInfo.transform.gameObject;
-        //            planeName = hitInfo.transform.gameObject.name;
-        //            ClearAllLayer();
-        //            hitInfo.transform.gameObject.layer = LayerMask.NameToLayer(SelectedLayer);
-        //        }
-        //        // ????material
-        //        SetMaterial();
-        //        HighlightGameObject(hitInfo.transform.gameObject);
-        //    }
-        //    else
-        //    {
-        //        SetMaterial();
-        //    }
-        //}
+        public static void AddSurface(GameObject surface){
+            //nitMaterial(surface);
+            SurfaceContainer.Add(surface);
+        }
 
         public void HighlightGameObject(GameObject go)
         {
@@ -77,9 +54,11 @@ namespace VRPainting
 
         public void ClearAllLayer()
         {
-            foreach (Transform child in GameObject.Find("Draw Surface").transform)
+            foreach (GameObject surface in SurfaceContainer)
             {
-                child.gameObject.layer = LayerMask.NameToLayer(HiddenLayer);
+                if(surface.activeSelf){
+                    surface.layer = LayerMask.NameToLayer(HiddenLayer);
+                }
             }
         }
 
@@ -93,39 +72,49 @@ namespace VRPainting
 
         public void SetMaterial()
         {
-            foreach (Transform child in GameObject.Find("Draw Surface").transform)
+            foreach (GameObject surface in SurfaceContainer)
             {
-                if (child.gameObject.name=="Default")
-                {
+                if(!surface.activeSelf){
                     continue;
                 }
-                Material mat = child.gameObject.GetComponent<MeshRenderer>().material;
+                // if (child.gameObject.name=="Default")
+                // {
+                //     continue;
+                // }
+                Material mat = surface.GetComponent<MeshRenderer>().material;
                 if (transparent) {
                     mat.color = new Color(1, 1, 1, 0);
                     continue;
                 }
-                if (child.gameObject.layer == LayerMask.NameToLayer(HiddenLayer))
+                if (surface.layer == LayerMask.NameToLayer(HiddenLayer))
                 {
                     mat.color = new Color(1, 1, 1, HIDDEN);
                 }
             }
         }
 
-
-        void initMaterials()
-        {
-            foreach (Transform child in GameObject.Find("Draw Surface").transform)
-            {
-                if (child.gameObject.name != "Default")
-                {
-                    Material mat = new Material(Shader.Find("Standard"));
-                    SetMaterialRenderingMode(mat, RenderingMode.Fade);
-                    mat.color = new Color(1, 1, 1, HIDDEN);
-                    child.gameObject.GetComponent<MeshRenderer>().material = mat;
-                    child.gameObject.layer = LayerMask.NameToLayer(HiddenLayer);
-                }
-            }
+        void initMaterial(GameObject surface){
+            Material mat = new Material(Shader.Find("Standard"));
+            SetMaterialRenderingMode(mat, RenderingMode.Fade);
+            mat.color = new Color(1, 1, 1, HIDDEN);
+            surface.GetComponent<MeshRenderer>().material = mat;
+            surface.layer = LayerMask.NameToLayer(HiddenLayer);
         }
+
+        // void initMaterials()
+        // {
+        //     foreach (Transform child in GameObject.Find("Draw Surface").transform)
+        //     {
+        //         if (child.gameObject.name != "Default")
+        //         {
+        //             Material mat = new Material(Shader.Find("Standard"));
+        //             SetMaterialRenderingMode(mat, RenderingMode.Fade);
+        //             mat.color = new Color(1, 1, 1, HIDDEN);
+        //             child.gameObject.GetComponent<MeshRenderer>().material = mat;
+        //             child.gameObject.layer = LayerMask.NameToLayer(HiddenLayer);
+        //         }
+        //     }
+        // }
 
         public static void SetMaterialRenderingMode(Material material, RenderingMode renderingMode)
         {

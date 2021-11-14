@@ -61,8 +61,6 @@ namespace VRPainting {
             }
             else if (global.action == ActionState.FREE) {
 
-                //selectDemo.SelectAndHighlight(new Ray(transform.position, transform.forward),dist);
-                //selectDemo.SelectAndHighlight(Camera.main.ScreenPointToRay(Input.mousePosition));
             }
             else if (global.action == ActionState.DELETE) {
                 DeleteLine(ControllerPosition);
@@ -125,6 +123,7 @@ namespace VRPainting {
                 return FinishPaint();
             return null;
         }
+
 
         private GameObject FinishPaint() {
             GameObject output;

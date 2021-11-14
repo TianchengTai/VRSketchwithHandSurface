@@ -107,7 +107,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.xr.management": {
-      "version": "3.2.16",
+      "version": "3.2.13",
       "depth": 1,
       "source": "registry",
       "dependencies": {

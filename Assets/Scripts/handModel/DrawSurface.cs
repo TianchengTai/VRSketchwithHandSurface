@@ -371,6 +371,13 @@ public class DrawSurface : MonoBehaviour
     // 在实例化表面时调用，将表面layer调整，添加刚体、InteractionBehaviour、ManipulationHand等组件，并调整参数
     public void FinishSurface() {
         GameObject surface = VirtualSurface;
+        AddInteractionComponent(surface);
+        VirtualSurface = null;
+        UndoRedoManager.Insert(new DrawCommand(surface));
+        SelectModel.AddSurface(surface);
+    }
+
+    public static void AddInteractionComponent(GameObject surface){
         Rigidbody Rb = surface.AddComponent<Rigidbody>();
         Rb.useGravity = false;
         Rb.isKinematic = true;
@@ -380,7 +387,15 @@ public class DrawSurface : MonoBehaviour
         surface.AddComponent<ManipulationHand>();
         surface.transform.SetParent(GameObject.Find("Draw Surface").transform);
         surface.layer = LayerMask.NameToLayer("hidden_surface");
-        VirtualSurface = null;
+    }
+
+    public static void RemoveInteractionComponent(GameObject surface){
+        ManipulationHand MH = surface.GetComponent<ManipulationHand>();
+        Destroy(MH);
+        InteractionBehaviour IB = surface.GetComponent<InteractionBehaviour>();
+        Destroy(IB);
+        Rigidbody Rb = surface.GetComponent<Rigidbody>();
+        Destroy(Rb);
     }
 
     List<String> calculateHandAngles()
