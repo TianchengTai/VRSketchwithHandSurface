@@ -37,7 +37,7 @@ public abstract class VRController:MonoBehaviour
 
     protected GlobalState global;
 
-    public float dist = 0.5f;
+    protected float dist = 0.5f;
 
     public int maxUndoStored = 100;
 

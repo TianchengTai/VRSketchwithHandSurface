@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Valve.VR;
 using System;
 using Leap.Unity.Interaction;
+using Valve.VR.Extras;
 
 namespace VRPainting {
     public class VRHandController : VRController {
@@ -36,11 +37,13 @@ namespace VRPainting {
         // Start is called before the first frame update
         void Start() {
             lineInfo = new LineInfo();
+            SetDist();
             global = GameObject.Find("Canvas").GetComponent<GlobalState>();
             selectModel = gameObject.AddComponent<SelectModel>();
             strokeModel = gameObject.AddComponent<StrokeModel>();
             meshModel = gameObject.AddComponent<MeshModel>();
         }
+
 
         void Update() {
             HandleUndoRedo();
@@ -66,20 +69,26 @@ namespace VRPainting {
             }
         }
 
+        // 光束的长度
+        private void SetDist() {
+            SteamVR_LaserPointer slp = GetComponent< SteamVR_LaserPointer>();
+            dist = slp.dist;
+        }
+
+        // 根据输入设置透明度
         private void SetTransparent() {
             if(menu.GetStateDown(pose.inputSource))
                 selectModel.transparent = !selectModel.transparent;
             if (UpPress.GetStateDown(pose.inputSource)) {
-                Debug.Log("ahhhhhhhh");
                 if (hitObject != null) {
-                    InteractionBehaviour IB = hitObject.GetComponent<InteractionBehaviour>();
+                    //InteractionBehaviour IB = hitObject.GetComponent<InteractionBehaviour>();
                     ManipulationHand MH= hitObject.GetComponent<ManipulationHand>();
-                    IB.enabled = !IB.enabled;
+                    //IB.enabled = !IB.enabled;
                     MH.enabled = !MH.enabled;
                 }
             }
         }
-
+        // // 渲染完物体后调用
         //private void OnRenderObject() {
         //    if (global.action == ActionState.DELETE) {
         //        if (hit) {
@@ -91,17 +100,17 @@ namespace VRPainting {
         //    }
 
         //}
-
-        void showNearLine(Vector3 position) {
-            Collider[] colliders = Physics.OverlapSphere(ControllerPosition, deleteDistance, LayerMask.GetMask("line"));
-            if (colliders.Length > 0) {
-                Material mat = new Material(Shader.Find("Unlit/Color"));
-                mat.SetColor("_Color", Color.red);
-                mat.SetPass(0);
-                Graphics.DrawMeshNow(mesh, Matrix4x4.TRS(colliders[0].GetComponent<BoxCollider>().center, Quaternion.identity, new Vector3(0.1f, 0.1f, 0.1f)));
-                //Graphics.DrawMeshNow(mesh, line.GetPosition(line.positionCount/2), Quaternion.identity);
-            }
-        }
+        // // 强调附近的笔画（暂时不需要）
+        //void showNearLine(Vector3 position) {
+        //    Collider[] colliders = Physics.OverlapSphere(ControllerPosition, deleteDistance, LayerMask.GetMask("line"));
+        //    if (colliders.Length > 0) {
+        //        Material mat = new Material(Shader.Find("Unlit/Color"));
+        //        mat.SetColor("_Color", Color.red);
+        //        mat.SetPass(0);
+        //        Graphics.DrawMeshNow(mesh, Matrix4x4.TRS(colliders[0].GetComponent<BoxCollider>().center, Quaternion.identity, new Vector3(0.1f, 0.1f, 0.1f)));
+        //        //Graphics.DrawMeshNow(mesh, line.GetPosition(line.positionCount/2), Quaternion.identity);
+        //    }
+        //}
 
         private bool judgePoint = true;
 
