@@ -18,6 +18,8 @@ namespace VRPainting {
 
         public SteamVR_Action_Boolean UpPress = SteamVR_Input.GetBooleanAction("SnapTurnUp");
 
+        public SteamVR_Action_Boolean DownPress = SteamVR_Input.GetBooleanAction("SnapTurnDown");
+
         public SteamVR_Action_Boolean menu = SteamVR_Input.GetBooleanAction("menu");
 
         StrokeModel strokeModel;
@@ -51,7 +53,7 @@ namespace VRPainting {
             ControllerFollow();
             UpdateLineInfo();
             PointerHighlight();
-            SetTransparent();
+            SetUI();
 
             if (global.action == ActionState.PAINT) {
                 DrawOneLine();
@@ -73,19 +75,34 @@ namespace VRPainting {
             dist = slp.dist;
         }
 
+        private void SetUI() {
+            SetTransparent();
+            SetLock();
+            SetPalette();
+        }
+
         // 根据输入设置透明度
         private void SetTransparent() {
             if(menu.GetStateDown(pose.inputSource))
                 selectModel.transparent = !selectModel.transparent;
+        }
+
+        private void SetLock() {
             if (UpPress.GetStateDown(pose.inputSource)) {
                 if (hitObject != null) {
-                    //InteractionBehaviour IB = hitObject.GetComponent<InteractionBehaviour>();
-                    ManipulationHand MH= hitObject.GetComponent<ManipulationHand>();
-                    //IB.enabled = !IB.enabled;
+                    ManipulationHand MH = hitObject.GetComponent<ManipulationHand>();
                     MH.enabled = !MH.enabled;
                 }
             }
         }
+
+        private void SetPalette() {
+            if (DownPress.GetLastStateDown(pose.inputSource)) {
+                GameObject palette = transform.Find("Palette").gameObject;
+                palette.SetActive(!palette.activeSelf);
+            }
+        }
+
         // // 渲染完物体后调用
         //private void OnRenderObject() {
         //    if (global.action == ActionState.DELETE) {
