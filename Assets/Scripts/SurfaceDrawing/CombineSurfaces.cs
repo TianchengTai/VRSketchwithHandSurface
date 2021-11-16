@@ -24,10 +24,10 @@ namespace VRPainting{
 
         public void Combine(GameObject surface1,GameObject surface2){
             GameObject newSurface = new GameObject("combine_surface");
+            newSurface.transform.position = (surface1.transform.position + surface2.transform.position) / 2;
             DrawSurface.RemoveInteractionComponent(surface1);
             DrawSurface.RemoveInteractionComponent(surface2);
-            DrawSurface.AddInteractionComponent(newSurface);
-            newSurface.AddComponent<MeshRenderer>();
+            DrawSurface.AddInteractionComponent(newSurface);            
             newSurface.transform.SetParent(GameObject.Find("Draw Surface").transform);
             surface1.transform.SetParent(newSurface.transform);
             surface2.transform.SetParent(newSurface.transform);

@@ -48,8 +48,11 @@ namespace VRPainting
 
         public void HighlightGameObject(GameObject go)
         {
-            Material mt =go.GetComponent<MeshRenderer>().material;
-            mt.color = new Color(1, 1, 1, Target == go ? SELECTED + MIDDLE : HIDDEN + MIDDLE);
+            if(go.GetComponent<MeshRenderer>()!=null){
+                Material mt =go.GetComponent<MeshRenderer>().material;
+                mt.color = new Color(1, 1, 1, Target == go ? SELECTED + MIDDLE : HIDDEN + MIDDLE);
+            }
+            
         }
 
         public void ClearAllLayer()
@@ -60,6 +63,7 @@ namespace VRPainting
                     surface.layer = LayerMask.NameToLayer(HiddenLayer);
                 }
             }
+            Debug.Log(SurfaceContainer.Count);
         }
 
 
@@ -81,14 +85,16 @@ namespace VRPainting
                 // {
                 //     continue;
                 // }
-                Material mat = surface.GetComponent<MeshRenderer>().material;
-                if (transparent) {
-                    mat.color = new Color(1, 1, 1, 0);
-                    continue;
-                }
-                if (surface.layer == LayerMask.NameToLayer(HiddenLayer))
-                {
-                    mat.color = new Color(1, 1, 1, HIDDEN);
+                if(surface.GetComponent<MeshRenderer>()!=null){
+                    Material mat = surface.GetComponent<MeshRenderer>().material;
+                    if (transparent) {
+                        mat.color = new Color(1, 1, 1, 0);
+                        continue;
+                    }
+                    if (surface.layer == LayerMask.NameToLayer(HiddenLayer))
+                    {
+                        mat.color = new Color(1, 1, 1, HIDDEN);
+                    }
                 }
             }
         }

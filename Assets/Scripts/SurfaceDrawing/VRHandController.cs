@@ -155,7 +155,7 @@ namespace VRPainting {
             if (selectModel.Target != null) {
                 Ray controllerRay = new Ray(transform.position, transform.forward);
                 RaycastHit hitInfo;
-                bool bHit = Physics.Raycast(controllerRay, out hitInfo, dist, LayerMask.GetMask(HiddenLayer));
+                bool bHit = Physics.Raycast(controllerRay, out hitInfo, dist, LayerMask.GetMask(HiddenLayer),QueryTriggerInteraction.Ignore);
                 if (bHit)
                     strokeModel.Draw(hitInfo.point, selectModel.Target);
             }
@@ -240,7 +240,7 @@ namespace VRPainting {
             ControllerPosition = transform.position + transform.forward * dist;
             Ray raycast = new Ray(transform.position, transform.forward);
             RaycastHit hit;
-            bool bHit = Physics.Raycast(raycast, out hit, dist,LayerMask.GetMask(HiddenLayer,VirtualLayer));
+            bool bHit = Physics.Raycast(raycast, out hit, dist,LayerMask.GetMask(HiddenLayer,VirtualLayer),QueryTriggerInteraction.Ignore);
             if (bHit) {
                 hitObject = hit.transform.gameObject;
                 TargetPosition = hit.point;

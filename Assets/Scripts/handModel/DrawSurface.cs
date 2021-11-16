@@ -384,6 +384,7 @@ public class DrawSurface : MonoBehaviour
         InteractionBehaviour IB = surface.AddComponent<InteractionBehaviour>();
         IB.manager = GameObject.Find("Interaction Manager").GetComponent<InteractionManager>();
         IB.ignoreContact = true;
+        //IB.overrideNoContactLayer = true;
         surface.AddComponent<ManipulationHand>();
         surface.transform.SetParent(GameObject.Find("Draw Surface").transform);
         surface.layer = LayerMask.NameToLayer("hidden_surface");
