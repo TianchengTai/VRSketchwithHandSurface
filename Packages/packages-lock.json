@@ -97,14 +97,17 @@
       }
     },
     "com.unity.xr.legacyinputhelpers": {
-      "version": "2.1.4",
+      "version": "2.1.7",
       "depth": 1,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.modules.vr": "1.0.0",
+        "com.unity.modules.xr": "1.0.0"
+      },
       "url": "https://packages.unity.cn"
     },
     "com.unity.xr.management": {
-      "version": "3.2.16",
+      "version": "3.2.13",
       "depth": 1,
       "source": "registry",
       "dependencies": {
