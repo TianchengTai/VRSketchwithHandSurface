@@ -28,7 +28,7 @@ namespace VRPainting{
             DrawSurface.RemoveInteractionComponent(surface1);
             DrawSurface.RemoveInteractionComponent(surface2);
             DrawSurface.AddInteractionComponent(newSurface);            
-            newSurface.transform.SetParent(GameObject.Find("Draw Surface").transform);
+            newSurface.transform.SetParent(DrawSurface.DrawingBoard.transform);
             surface1.transform.SetParent(newSurface.transform);
             surface2.transform.SetParent(newSurface.transform);
         }

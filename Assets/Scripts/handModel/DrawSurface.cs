@@ -16,7 +16,7 @@ public class DrawSurface : MonoBehaviour
     //虚物体
     GameObject VirtualSurface;
 
-
+    public static GameObject DrawingBoard;
     public LeapXRServiceProvider provider;
     Controller controller = new Controller();
     public Material mat;  //物体的材质
@@ -33,7 +33,6 @@ public class DrawSurface : MonoBehaviour
     Vector3 wristPosition;
 
     GestureType gesture = GestureType.none;
-    LineRenderer line;
     //-----------------------------------------------------------------------------
 
     // Start is called before the first frame update
@@ -51,8 +50,8 @@ public class DrawSurface : MonoBehaviour
         wristPosition = new Vector3();
 
         gesture = GestureType.none;
-        line = gameObject.AddComponent<LineRenderer>();
-        gameObject.GetComponent<Renderer>().enabled = false;
+        //gameObject.GetComponent<Renderer>().enabled = false;
+        DrawingBoard = GameObject.Find("Drawing Board");
         if (mat == null)
         {
             mat = new Material(Shader.Find("Standard"));
@@ -73,9 +72,43 @@ public class DrawSurface : MonoBehaviour
         Frame source = controller.Frame();
         Frame dest = new Frame();
         provider.transformFrame(source, dest);
+        GetHandInfo(dest);
 
-        
+        waitTime += Time.deltaTime;
+        if (dest.Hands.Count == 0) {
+            if (VirtualSurface != null) {
+                Destroy(VirtualSurface);
+            }
+        }
+        else {
+            foreach (var hand in dest.Hands) {
+                if (hand.IsLeft) {
+                    if (isCollider) {
+                        if (VirtualSurface != null) {
+                            Destroy(VirtualSurface);
+                        }
+                        break;
+                    }
+                    if (VirtualSurface != null) {
+                        SetPosition(VirtualSurface,gesture);
+                    }
+                    GestureType CurrGesture = RecognitionHand.recognizeHand(calculateHandAngles());
+                    //Debug.Log(gesture.ToString());
+                    if (waitTime > interval) {
+                        if (VirtualSurface != null) {
+                            Destroy(VirtualSurface);
+                        }
+                        VirtualSurface = CreateSurface(CurrGesture);
+                        gesture = CurrGesture;
+                        waitTime = 0;
+                    }
+                }
 
+            }
+        }
+    }
+
+    void GetHandInfo(Frame dest){
         foreach (var hand in dest.Hands)
         {
             if (hand.IsRight) {
@@ -118,66 +151,6 @@ public class DrawSurface : MonoBehaviour
                 catch (System.IndexOutOfRangeException) { };
             }
         }
-
-
-        waitTime += Time.deltaTime;
-        if (dest.Hands.Count == 0) {
-            if (VirtualSurface != null) {
-                Destroy(VirtualSurface);
-            }
-        }
-        else {
-            foreach (var hand in dest.Hands) {
-                if (hand.IsLeft) {
-                    if (isCollider) {
-                        if (VirtualSurface != null) {
-                            Destroy(VirtualSurface);
-                        }
-                        break;
-                    }
-                    if (VirtualSurface != null) {
-                        SetPosition(VirtualSurface,gesture);
-                    }
-                    GestureType CurrGesture = RecognitionHand.recognizeHand(calculateHandAngles());
-                    //Debug.Log(gesture.ToString());
-                    if (waitTime > interval) {
-                        if (VirtualSurface != null) {
-                            Destroy(VirtualSurface);
-                        }
-                        VirtualSurface = CreateSurface(CurrGesture);
-                        gesture = CurrGesture;
-                        waitTime = 0;
-                    }
-                }
-
-            }
-        }
-        
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            if (transform.Find("Plane"))
-            {
-                Debug.Log("Deleting Plane");
-                Destroy(transform.Find("Plane").gameObject);
-            }
-            if (transform.Find("Surface"))
-            {
-                Destroy(transform.Find("Surface").gameObject);
-            }
-            if (transform.Find("Cylinder"))
-            {
-                Destroy(transform.Find("Cylinder").gameObject);
-            }
-            if (transform.Find("Cone"))
-            {
-                Destroy(transform.Find("Cone").gameObject);
-            }
-            if (transform.Find("Sphere"))
-            {
-                Destroy(transform.Find("Sphere").gameObject);
-            }
-        }
     }
 
     // void create() {
@@ -215,7 +188,7 @@ public class DrawSurface : MonoBehaviour
             case GestureType.zhu:
                 GameObject cylinder;
                 cylinder = CreateCylinder();
-                InitSurface(cylinder, "Cone", Color.grey);
+                InitSurface(cylinder, "Cylinder", Color.grey);
                 return cylinder;
             case GestureType.zhui:
                 GameObject cone;
@@ -227,8 +200,6 @@ public class DrawSurface : MonoBehaviour
                 InitSurface(sphere, "Sphere", Color.grey);
                 sphere.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
                 return sphere;
-            case GestureType.none:
-                return null;
             default:
                 return null;
         }
@@ -386,7 +357,7 @@ public class DrawSurface : MonoBehaviour
         IB.ignoreContact = true;
         //IB.overrideNoContactLayer = true;
         surface.AddComponent<ManipulationHand>();
-        surface.transform.SetParent(GameObject.Find("Draw Surface").transform);
+        surface.transform.SetParent(DrawingBoard.transform);
         surface.layer = LayerMask.NameToLayer("hidden_surface");
     }
 

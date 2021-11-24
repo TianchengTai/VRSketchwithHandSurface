@@ -5,12 +5,19 @@ using UnityEngine;
 using Leap.Unity;
 using Leap.Unity.Interaction;
 
+public enum TouchAction
+{
+    Free,
+    Pinching,
+    Scaling
+}
 public class ManipulationHand : MonoBehaviour
 {
     public LeapXRServiceProvider provider;
     private Controller controller;
-    private bool isPinched = false;
-    private bool isGrabbed = false;
+    //private bool isPinched = false;
+    //private bool isGrabbed = false;
+    TouchAction currAction;
     private InteractionBehaviour interactionBehaviour;
 
     private float prevGrabDegree = 0.0f;
@@ -26,6 +33,7 @@ public class ManipulationHand : MonoBehaviour
         controller = new Controller();
         interactionBehaviour = GetComponent<InteractionBehaviour>();
         provider = GameObject.Find("Main Camera").GetComponent<LeapXRServiceProvider>();
+        currAction = TouchAction.Free;
         interactionBehaviour.OnGraspStay = () =>
         {
             //Debug.Log(interactionBehaviour.moveObjectWhenGrasped);
@@ -48,20 +56,20 @@ public class ManipulationHand : MonoBehaviour
  
     
     // 开始接触
-    void OnTriggerEnter(Collider collider) {
-        if (!enabled) return;
-        GameObject.Find("Draw Surface").GetComponent<DrawSurface>().isCollider = true;
-        if (collider.tag.Equals("hand"))
-            Debug.Log("开始接触");
-        Frame source = controller.Frame();
-        Frame dest = new Frame();
-        provider.transformFrame(source, dest);
-        foreach (Hand hand in dest.Hands) {
-            if (hand.IsLeft) {
-                prevGrabDegree = GetGrabDegree(hand);
-            }
-        }
-    }
+    // void OnTriggerEnter(Collider collider) {
+    //     if (!enabled) return;
+    //     GameObject.Find("Draw Surface").GetComponent<DrawSurface>().isCollider = true;
+    //     if (collider.tag.Equals("hand"))
+    //         Debug.Log("开始接触");
+    //     Frame source = controller.Frame();
+    //     Frame dest = new Frame();
+    //     provider.transformFrame(source, dest);
+    //     foreach (Hand hand in dest.Hands) {
+    //         if (hand.IsLeft) {
+    //             prevGrabDegree = GetGrabDegree(hand);
+    //         }
+    //     }
+    // }
 
     // 接触结束
     void OnTriggerExit(Collider collider) {
@@ -69,13 +77,16 @@ public class ManipulationHand : MonoBehaviour
         if (!enabled) return;
         if (collider.tag.Equals("hand"))
             Debug.Log("接触结束");
-        isGrabbed = false;
-        isPinched = false;
+        // isGrabbed = false;
+        // isPinched = false;
+        currAction = TouchAction.Free;
+        prevGrabDegree = 0;
     }
 
     // 接触持续中
     void OnTriggerStay(Collider collider) {
         if (!enabled) return;
+        GameObject.Find("Draw Surface").GetComponent<DrawSurface>().isCollider = true;
         //if (!collider.tag.Equals("hand")) return;
         Debug.Log("接触持续中");
         Frame source = controller.Frame();
@@ -83,48 +94,57 @@ public class ManipulationHand : MonoBehaviour
         provider.transformFrame(source, dest);
         foreach (Hand hand in dest.Hands) {
             if (hand.IsLeft) {
-                //if (isPinched) {
-                //    isGrabbed = false;
-                //    interactionBehaviour.ignoreGrasping = false;
-                //    isPinched = GetIsMaxPinch(hand);
-                //}
-                //else {
-                //    interactionBehaviour.ReleaseFromGrasp();
-                //    interactionBehaviour.ignoreGrasping = true;
-                //    isPinched = GetIsMinPinch(hand);
-                //    if (!isPinched && isGrabbed) {
-                //        //isPinched = false;
-                //        Scale(hand);
-                //    }
-                //    else {
-                //        isGrabbed = GetIsGrab(hand);
-                //    }
-                //}
-                if (GetIsPinch(hand)) {
-                    if (isPinched) {
-                        isGrabbed = false;
-                        interactionBehaviour.ignoreGrasping = false;
-                        isPinched = GetIsMaxPinch(hand);
+                // 当前未确定动作
+                if(currAction == TouchAction.Free){
+                    // 先判断是否是缩放（抓的动作）
+                    if(GetIsGrab(hand)){
+                        currAction = TouchAction.Scaling;
+                        return; //要返回，接触中不能改动作类型了
                     }
-                    else {
-                        interactionBehaviour.ReleaseFromGrasp();
-                        interactionBehaviour.ignoreGrasping = true;
-                        isPinched = GetIsMinPinch(hand);
+                    // 不是缩放则判断是否是捏取
+                    if(GetIsPinch(hand)){
+                        currAction = TouchAction.Pinching;
+                        return;
                     }
                 }
-                else {
-                    if (isPinched) {
-                        interactionBehaviour.ReleaseFromGrasp();
-                        interactionBehaviour.ignoreGrasping = true;
-                        isPinched = false;
-                    }
-                    if (isGrabbed) {
-                        Scale(hand);
-                    }
-                    else {
-                        isGrabbed = GetIsGrab(hand);
-                    }
+                // 如果是捏取动作
+                else if(currAction == TouchAction.Pinching){
+                    // 将组件设置为可抓取，其余判断交给上面的OnGraspStay()函数
+                    interactionBehaviour.ignoreGrasping = false;
                 }
+                // 如果是缩放动作
+                else if(currAction==TouchAction.Scaling){
+                    // 将组件设置为不可抓取
+                    interactionBehaviour.ignoreGrasping = true;
+                    // 进行缩放操作
+                    Scale(hand);
+                }
+
+                // if (GetIsPinch(hand)) {
+                //     if (isPinched) {
+                //         isGrabbed = false;
+                //         interactionBehaviour.ignoreGrasping = false;
+                //         isPinched = GetIsMaxPinch(hand);
+                //     }
+                //     else {
+                //         interactionBehaviour.ReleaseFromGrasp();
+                //         interactionBehaviour.ignoreGrasping = true;
+                //         isPinched = GetIsMinPinch(hand);
+                //     }
+                // }
+                // else {
+                //     if (isPinched) {
+                //         interactionBehaviour.ReleaseFromGrasp();
+                //         interactionBehaviour.ignoreGrasping = true;
+                //         isPinched = false;
+                //     }
+                //     if (isGrabbed) {
+                //         Scale(hand);
+                //     }
+                //     else {
+                //         isGrabbed = GetIsGrab(hand);
+                //     }
+                // }
             }
         }
     }
@@ -135,6 +155,11 @@ public class ManipulationHand : MonoBehaviour
     /// </summary>
     public void Scale(Hand hand)
     {
+        // 如果prev 还没有设定
+        if (prevGrabDegree==0) {
+            prevGrabDegree = GetGrabDegree(hand);
+            return ;
+        }
         float currGrabDegree = GetGrabDegree(hand);
         if (Mathf.Abs( currGrabDegree - prevGrabDegree) <= deltaCloseGrabDegree) {
             Debug.Log(currGrabDegree - prevGrabDegree);
@@ -146,6 +171,7 @@ public class ManipulationHand : MonoBehaviour
         prevGrabDegree = GetGrabDegree(hand);
     }
 
+    // TODO: 验证判定条件是否合理
     public bool GetIsGrab(Hand hand) {
         float indexMag = (hand.Fingers[1].TipPosition - hand.Fingers[0].TipPosition).Magnitude;
         float midMag = (hand.Fingers[2].TipPosition - hand.Fingers[0].TipPosition).Magnitude;
@@ -163,6 +189,7 @@ public class ManipulationHand : MonoBehaviour
 
     }
 
+    // TODO: 验证判定条件是否合理
     public bool GetIsPinch(Hand hand) {
         float indexMag = (hand.Fingers[1].TipPosition - hand.PalmPosition).Magnitude;
         float midMag = (hand.Fingers[2].TipPosition - hand.PalmPosition).Magnitude;
@@ -174,8 +201,8 @@ public class ManipulationHand : MonoBehaviour
 
     public bool GetIsMaxPinch(Hand hand) {
         //Debug.Log(hand.PinchDistance);
-        float indexMag = (hand.Fingers[1].TipPosition - hand.PalmPosition).Magnitude;
-        float midMag = (hand.Fingers[2].TipPosition - hand.PalmPosition).Magnitude;
+        //float indexMag = (hand.Fingers[1].TipPosition - hand.PalmPosition).Magnitude;
+        //float midMag = (hand.Fingers[2].TipPosition - hand.PalmPosition).Magnitude;
         //        float ringMag = (hand.Fingers[3].TipPosition - hand.PalmPosition).Magnitude;
         //        float pinkyMag = (hand.Fingers[4].TipPosition - hand.PalmPosition).Magnitude;
         return hand.PinchDistance <= deltaFarFinger;

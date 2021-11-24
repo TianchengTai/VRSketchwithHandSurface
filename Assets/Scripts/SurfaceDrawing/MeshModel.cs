@@ -181,7 +181,7 @@ namespace VRPainting
             Pipeline.PanAndRender(out newSurface, cpList1,cpList2,2,2,line1.loop,line2.loop);
             newSurface.AddComponent<MeshCollider>();
             newSurface.transform.position = new Vector3(0f,0f,0f);
-            newSurface.transform.SetParent(GameObject.Find("Draw Surface").transform);
+            newSurface.transform.SetParent(DrawSurface.DrawingBoard.transform);
             newSurface.GetComponent<MeshRenderer>().material = gameObject.GetComponent<VRPaintController>().material;
             newSurface.transform.position += line1.bounds.center- newSurface.GetComponent<MeshRenderer>().bounds.center + line2.bounds.center - line2.GetPosition(0);
             surface = newSurface;
@@ -192,10 +192,10 @@ namespace VRPainting
         public GameObject CreateSurfaceByRotate(LineRenderer line,Vector3 center, Vector3 axis, float angle)
         {
             GameObject surface;
-            List<CP> cpList = Line2CPList(line, center, true);//À­Ä¬-µÀ¸ñÀ­Ë¹-ÆÕ¿ËËã·¨£¬Ö±Ïß¼ò»¯
-            //List<CP> cpList = RamerDouglasPeucker.Reduce(Line2CPList(line,center,true), tolerance);//À­Ä¬-µÀ¸ñÀ­Ë¹-ÆÕ¿ËËã·¨£¬Ö±Ïß¼ò»¯
-            Pipeline.RotateAndRender(out surface, cpList, axis, angle, 2, 2, line.loop);//Ðý×ª½Ç
-            surface.transform.SetParent(GameObject.Find("Draw Surface").transform);
+            List<CP> cpList = Line2CPList(line, center, true);//ï¿½ï¿½Ä¬-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¹-ï¿½Õ¿ï¿½ï¿½ã·¨ï¿½ï¿½Ö±ï¿½ß¼ï¿½
+            //List<CP> cpList = RamerDouglasPeucker.Reduce(Line2CPList(line,center,true), tolerance);//ï¿½ï¿½Ä¬-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¹-ï¿½Õ¿ï¿½ï¿½ã·¨ï¿½ï¿½Ö±ï¿½ß¼ï¿½
+            Pipeline.RotateAndRender(out surface, cpList, axis, angle, 2, 2, line.loop);//ï¿½ï¿½×ªï¿½ï¿½
+            surface.transform.SetParent(DrawSurface.DrawingBoard.transform);
             return surface;
         }
 

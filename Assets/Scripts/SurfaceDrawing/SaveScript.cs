@@ -8,6 +8,8 @@ namespace VRPainting{
     {
         // Start is called before the first frame update
         public GameObject saveObj;
+
+        public string fileName;
         int id = 1;
 
         public int load_id;
@@ -20,7 +22,7 @@ namespace VRPainting{
         }
 
         public void Load(int prefab_id){
-            GameObject g = PrefabUtility.LoadPrefabContents("Assets/save_data/Draw Surface"+prefab_id+".prefab");
+            GameObject g = PrefabUtility.LoadPrefabContents("Assets/save_data/"+fileName+prefab_id+".prefab");
             Instantiate(g);
             foreach(MeshRenderer mesh in g.GetComponentsInChildren<MeshRenderer>()){
                 GameObject sur = mesh.gameObject;
