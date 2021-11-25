@@ -77,7 +77,7 @@ public class DrawSurface : MonoBehaviour
         waitTime += Time.deltaTime;
         if (dest.Hands.Count == 0) {
             if (VirtualSurface != null) {
-                Destroy(VirtualSurface);
+                VirtualSurface.SetActive(false);
             }
         }
         else {
@@ -85,11 +85,16 @@ public class DrawSurface : MonoBehaviour
                 if (hand.IsLeft) {
                     if (isCollider) {
                         if (VirtualSurface != null) {
-                            Destroy(VirtualSurface);
+                            VirtualSurface.SetActive(false);
                         }
                         break;
                     }
-                    if (VirtualSurface != null) {
+                    else{
+                        if (VirtualSurface != null) {
+                            VirtualSurface.SetActive(true);
+                        }
+                    }
+                    if (VirtualSurface != null && VirtualSurface.activeSelf) {
                         SetPosition(VirtualSurface,gesture);
                     }
                     GestureType CurrGesture = RecognitionHand.recognizeHand(calculateHandAngles());

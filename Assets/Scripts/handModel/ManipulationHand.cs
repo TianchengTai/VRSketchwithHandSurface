@@ -149,6 +149,8 @@ public class ManipulationHand : MonoBehaviour
         }
     }
 
+
+
  
     /// <summary>
     /// 缩放
@@ -173,10 +175,13 @@ public class ManipulationHand : MonoBehaviour
 
     // TODO: 验证判定条件是否合理
     public bool GetIsGrab(Hand hand) {
-        float indexMag = (hand.Fingers[1].TipPosition - hand.Fingers[0].TipPosition).Magnitude;
-        float midMag = (hand.Fingers[2].TipPosition - hand.Fingers[0].TipPosition).Magnitude;
-        //Debug.Log(midMag - indexMag);
-        return hand.PinchDistance >= deltaCloseFinger && midMag >= indexMag && midMag - indexMag <= deltaCloseFinger;
+        // float indexMag = (hand.Fingers[1].TipPosition - hand.Fingers[0].TipPosition).Magnitude;
+        // float midMag = (hand.Fingers[2].TipPosition - hand.Fingers[0].TipPosition).Magnitude;
+        // //Debug.Log(midMag - indexMag);
+        // return hand.PinchDistance >= deltaCloseFinger && midMag >= indexMag && midMag - indexMag <= deltaCloseFinger;
+        float indexMag = (hand.Fingers[1].TipPosition - hand.PalmPosition).Magnitude;
+        float midMag = (hand.Fingers[2].TipPosition - hand.PalmPosition).Magnitude;
+        return midMag >= 1.01f*indexMag;
     }
 
     public bool GetIsMinPinch(Hand hand){
@@ -195,7 +200,7 @@ public class ManipulationHand : MonoBehaviour
         float midMag = (hand.Fingers[2].TipPosition - hand.PalmPosition).Magnitude;
         //        float ringMag = (hand.Fingers[3].TipPosition - hand.PalmPosition).Magnitude;
         //        float pinkyMag = (hand.Fingers[4].TipPosition - hand.PalmPosition).Magnitude;
-        return midMag <= 1.02f*indexMag;
+        return midMag <= indexMag;
 
     }
 
