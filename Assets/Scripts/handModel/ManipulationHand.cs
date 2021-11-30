@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Leap.Unity;
 using Leap.Unity.Interaction;
+using JointDirection;
+
 
 public enum TouchAction
 {
@@ -111,6 +113,7 @@ public class ManipulationHand : MonoBehaviour
                 else if(currAction == TouchAction.Pinching){
                     // 将组件设置为可抓取，其余判断交给上面的OnGraspStay()函数
                     interactionBehaviour.ignoreGrasping = false;
+                    AutoAlignAndJoint();
                 }
                 // 如果是缩放动作
                 else if(currAction==TouchAction.Scaling){
@@ -216,6 +219,51 @@ public class ManipulationHand : MonoBehaviour
 
     public float GetGrabDegree(Hand hand){
         return hand.GrabStrength;//0-open,1-fist
+    }
+
+    // align and joint
+    private void AutoAlignAndJoint(){
+        Collider[] hitColliders=new Collider[2];
+        int no_Collider = Physics.OverlapSphereNonAlloc(transform.position, 0.15f, hitColliders,LayerMask.GetMask("hidden_surface"));
+        if (hitColliders.Length>1){
+            foreach(Collider collider in hitColliders){
+                if (collider.transform!=transform){
+                    align(collider.transform,transform);
+                    joint(collider.transform,transform);
+                    Debug.Log("完成对齐和拼接");
+                    break;
+                }
+            }
+        }
+    }
+
+    private void align(Transform aimTransform, Transform curTransform)
+    {
+        bool sameUp = Vector3.Dot(curTransform.up, aimTransform.up) >=0.0f;
+        curTransform.rotation = aimTransform.rotation;
+        if (!sameUp)
+        {
+            curTransform.RotateAround(curTransform.position, curTransform.forward, 180.0f);
+        }
+    }
+    private void joint(Transform aimTransform, Transform curTransform)
+    {
+        Vector3 aim2cur=(curTransform.position - aimTransform.position).normalized;
+        curTransform.position = aimTransform.position;
+        MoveDirection[] normalDirections = { new MoveUp(aimTransform.up.normalized),new MoveRight(aimTransform.right.normalized), new MoveForward(aimTransform.forward.normalized)
+                , new MoveDown(-aimTransform.up.normalized),new MoveRight(-aimTransform.right.normalized),  new MoveForward(-aimTransform.forward.normalized )};
+        int translateDirIndex = 0;
+        float maxDot = 0.0f;
+        for(int i=0;i<normalDirections.Length;i++)
+        {
+            float tempDot = Vector3.Dot(aim2cur, normalDirections[i].getDirection());
+            if (tempDot>0&&tempDot >= maxDot)
+            {
+                maxDot = tempDot;
+                translateDirIndex = i;
+            }     
+        }
+        normalDirections[translateDirIndex].move(aimTransform, curTransform);
     }
     
 }

@@ -364,6 +364,8 @@ public class DrawSurface : MonoBehaviour
         surface.AddComponent<ManipulationHand>();
         surface.transform.SetParent(DrawingBoard.transform);
         surface.layer = LayerMask.NameToLayer("hidden_surface");
+        // aglign and joint
+        //surface.AddComponent<AlignAndJoint>();
     }
 
     public static void RemoveInteractionComponent(GameObject surface){
@@ -393,5 +395,6 @@ public class DrawSurface : MonoBehaviour
         }
         return cpList;
     }
+
 
 }
