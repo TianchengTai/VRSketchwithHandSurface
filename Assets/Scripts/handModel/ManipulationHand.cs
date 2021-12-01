@@ -121,6 +121,7 @@ public class ManipulationHand : MonoBehaviour
                     interactionBehaviour.ignoreGrasping = true;
                     // 进行缩放操作
                     Scale(hand);
+                    AutoAlignAndJoint();
                 }
 
                 // if (GetIsPinch(hand)) {
