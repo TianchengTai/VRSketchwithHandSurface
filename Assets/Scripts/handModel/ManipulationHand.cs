@@ -90,7 +90,6 @@ public class ManipulationHand : MonoBehaviour
         if (!enabled) return;
         GameObject.Find("Draw Surface").GetComponent<DrawSurface>().isCollider = true;
         //if (!collider.tag.Equals("hand")) return;
-        Debug.Log("接触持续中");
         Frame source = controller.Frame();
         Frame dest = new Frame();
         provider.transformFrame(source, dest);
@@ -168,7 +167,6 @@ public class ManipulationHand : MonoBehaviour
         }
         float currGrabDegree = GetGrabDegree(hand);
         if (Mathf.Abs( currGrabDegree - prevGrabDegree) <= deltaCloseGrabDegree) {
-            Debug.Log(currGrabDegree - prevGrabDegree);
             return;
         }
         Vector3 value = transform.localScale;
@@ -224,14 +222,13 @@ public class ManipulationHand : MonoBehaviour
 
     // align and joint
     private void AutoAlignAndJoint(){
-        Collider[] hitColliders=new Collider[2];
+        Collider[] hitColliders=new Collider[10];
         int no_Collider = Physics.OverlapSphereNonAlloc(transform.position, 0.15f, hitColliders,LayerMask.GetMask("hidden_surface"));
         if (hitColliders.Length>1){
             foreach(Collider collider in hitColliders){
-                if (collider.transform!=transform){
+                if (collider!=null&&collider.transform!=transform&&!collider.transform.IsChildOf(transform)){
                     align(collider.transform,transform);
                     joint(collider.transform,transform);
-                    Debug.Log("完成对齐和拼接");
                     break;
                 }
             }

@@ -258,7 +258,6 @@ public class DrawSurface : MonoBehaviour
         float ratio = (Mathf.Max(angle, 80) - 60) / 60;
         GameObject cylinder = new GameObject();
         MeshFilter mf = cylinder.AddComponent<MeshFilter>();
-        Debug.Log(angle);
         if (angle > 160) {
             mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/zhu1.asset");
         }
@@ -283,7 +282,6 @@ public class DrawSurface : MonoBehaviour
         float ratio = (Mathf.Max(angle,80) - 60) / 60;
         GameObject cone = new GameObject();
         MeshFilter mf = cone.AddComponent<MeshFilter>();
-        Debug.Log(angle);
         if (angle > 160) {
             mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/zhui1.asset");
         }

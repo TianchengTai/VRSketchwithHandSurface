@@ -64,7 +64,6 @@ namespace VRPainting
                     surface.layer = LayerMask.NameToLayer(HiddenLayer);
                 }
             }
-            Debug.Log(SurfaceContainer.Count);
         }
 
 

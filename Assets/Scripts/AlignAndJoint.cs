@@ -132,7 +132,6 @@ namespace JointDirection
 
             }
             curTransform.Translate(up*distance, Space.World);
-            Debug.Log("向上对齐");
         }
     }
     class MoveDown : MoveDirection
@@ -155,7 +154,6 @@ namespace JointDirection
 
             }
             curTransform.Translate(down * distance, Space.World);
-            Debug.Log("向下对齐");
         }
     }
     class MoveRight: MoveDirection
@@ -168,7 +166,6 @@ namespace JointDirection
             float distance = (aimTransform.GetComponent<MeshFilter>().mesh.bounds.size.x / 2 ) * aimTransform.localScale.x
                    + (curTransform.GetComponent<MeshFilter>().mesh.bounds.size.x / 2 ) * curTransform.localScale.x;
             curTransform.Translate(right*distance, Space.World);
-            Debug.Log("左右对齐");
         }
 
     }
@@ -182,7 +179,6 @@ namespace JointDirection
             float distance = (aimTransform.GetComponent<MeshFilter>().mesh.bounds.size.z / 2) * aimTransform.localScale.z
                   + (curTransform.GetComponent<MeshFilter>().mesh.bounds.size.z / 2) * curTransform.localScale.z;
             curTransform.Translate(forward * distance, Space.World);
-            Debug.Log("前后对齐");
         }
     }
 }

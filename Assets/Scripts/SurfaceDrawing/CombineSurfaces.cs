@@ -5,7 +5,7 @@ using UnityEngine;
 namespace VRPainting{
     public class CombineSurfaces : MonoBehaviour
     {
-        public List<GameObject> surfaces;
+        public List<GameObject> ToCombineSurfaces;
         void Start()
         {
             
@@ -17,8 +17,11 @@ namespace VRPainting{
         }
 
         public void myTest(){
-            if(surfaces.Count>=2){
-                Combine(surfaces[0],surfaces[1]); 
+            if(ToCombineSurfaces.Count==2){
+                Combine(ToCombineSurfaces[0],ToCombineSurfaces[1]); 
+            }
+            else if(ToCombineSurfaces.Count>2){
+                CombineAll(ToCombineSurfaces);
             }
         }
 
@@ -32,5 +35,24 @@ namespace VRPainting{
             surface1.transform.SetParent(newSurface.transform);
             surface2.transform.SetParent(newSurface.transform);
         }
+
+        public void CombineAll(List<GameObject> surfaces){
+            GameObject newSurface = new GameObject("combine_surface");
+            int count = 0;
+            Vector3 newSurfacePosition = new Vector3(0,0,0);
+            foreach(GameObject surface in surfaces){
+                if(surface==null) continue;
+                DrawSurface.RemoveInteractionComponent(surface);
+                newSurfacePosition+=surface.transform.position;
+                count++;
+            }
+            newSurface.transform.position = newSurfacePosition / count;
+            newSurface.transform.SetParent(DrawSurface.DrawingBoard.transform);
+            DrawSurface.AddInteractionComponent(newSurface); 
+            foreach(GameObject surface in surfaces){
+                surface.transform.SetParent(newSurface.transform);
+            }  
+        }
+
     }
 }
