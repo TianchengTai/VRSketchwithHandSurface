@@ -98,7 +98,7 @@ namespace VRPainting {
 
         private void SetPalette() {
             if (DownPress.GetLastStateDown(pose.inputSource)) {
-                GameObject palette = transform.Find("Palette").gameObject;
+                GameObject palette = transform.Find("PaletteCube").gameObject;
                 palette.SetActive(!palette.activeSelf);
             }
         }
