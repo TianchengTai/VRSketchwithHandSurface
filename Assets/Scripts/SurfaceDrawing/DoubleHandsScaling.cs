@@ -18,7 +18,7 @@ namespace VRPainting{
 
         public Vector3 BoardSize;
 
-        public Vector3 BoardPosition;
+        public Quaternion BoardRotation;
         public SteamVR_Action_Boolean LeftBtn = SteamVR_Input.GetBooleanAction("SideBtn");
         void Start()
         {
@@ -34,7 +34,7 @@ namespace VRPainting{
                 left_posi = left_pose.transform.position;
                 right_posi = right_pose.transform.position;
                 BoardSize = DrawingBoard.transform.localScale;
-                BoardPosition = DrawingBoard.transform.position;
+                BoardRotation = DrawingBoard.transform.rotation;
                 return;
             }
             if(LeftBtn.GetState(left_pose.inputSource)&&LeftBtn.GetState(right_pose.inputSource)){
@@ -43,7 +43,7 @@ namespace VRPainting{
                 Vector3 curr_left2right = curr_right_posi-curr_left_posi;
                 Vector3 prev_left2right = right_posi-left_posi;
                 DrawingBoard.transform.localScale=BoardSize*curr_left2right.sqrMagnitude/prev_left2right.sqrMagnitude;
-                DrawingBoard.transform.position = Quaternion.FromToRotation(prev_left2right,curr_left2right)*BoardPosition;
+                DrawingBoard.transform.rotation = Quaternion.FromToRotation(prev_left2right,curr_left2right)*BoardRotation;
             }
         }
 }

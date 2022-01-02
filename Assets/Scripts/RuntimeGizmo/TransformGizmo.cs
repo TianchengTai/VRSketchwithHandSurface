@@ -406,7 +406,7 @@ namespace RuntimeGizmos
                 Ray mouseRay;
                 if (useVR)
                 {
-                    mouseRay = new Ray(GameObject.Find("Controller (right)").transform.position, GameObject.Find("Controller (right)").transform.forward);
+                    mouseRay = new Ray(pose.transform.position, pose.transform.forward);
                 }
                 else
                 {
@@ -669,7 +669,7 @@ namespace RuntimeGizmos
                 Ray mouseRay;
                 if (useVR)
                 {
-                    mouseRay = new Ray(GameObject.Find("Controller (right)").transform.position, GameObject.Find("Controller (right)").transform.forward);
+                    mouseRay = new Ray(pose.transform.position, pose.transform.forward);
                 }
                 else
                 {
@@ -1059,7 +1059,7 @@ namespace RuntimeGizmos
                 Ray mouseRay;
                 if (useVR)
                 {
-                    mouseRay = new Ray(GameObject.Find("Controller (right)").transform.position, GameObject.Find("Controller (right)").transform.forward);
+                    mouseRay = new Ray(pose.transform.position, pose.transform.forward);
                 }
                 else
                 {
@@ -1076,7 +1076,7 @@ namespace RuntimeGizmos
             Ray mouseRay;
             if (useVR)
             {
-                mouseRay = new Ray(GameObject.Find("Controller (right)").transform.position, GameObject.Find("Controller (right)").transform.forward);
+                mouseRay = new Ray(pose.transform.position, pose.transform.forward);
             }
             else
             {
@@ -1105,7 +1105,7 @@ namespace RuntimeGizmos
                 Ray mouseRay;
                 if (useVR)
                 {
-                    mouseRay = new Ray(GameObject.Find("Controller (right)").transform.position, GameObject.Find("Controller (right)").transform.forward);
+                    mouseRay = new Ray(pose.transform.position, pose.transform.forward);
                 }
                 else
                 {
