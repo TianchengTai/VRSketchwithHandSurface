@@ -24,6 +24,7 @@ namespace VRPainting
 
         public Vector3 PointObjectPosition;
         public SteamVR_Action_Boolean LeftBtn = SteamVR_Input.GetBooleanAction("SideBtn");
+        public SteamVR_Action_Boolean GenSurfaceBtn = SteamVR_Input.GetBooleanAction("InteractUI");
         void Start()
         {
 
@@ -62,7 +63,32 @@ namespace VRPainting
                 PointObject.transform.position = left_pose.transform.position - left_posi + PointObjectPosition;
             }
         }
+        void genSurfaceWithLeftTrigger(){
+           //GetPointObject();
+           if(GenSurfaceBtn.GetStateDown(left_pose.inputSource)){
+               //GetPointObject();
+               GameObject cone = new GameObject();
+               MeshFilter mf = cone.AddComponent<MeshFilter>();
+               mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/zhui1.asset");
+               cone.AddComponent<MeshRenderer>();
+               cone.transform.localScale = new Vector3(0.15f,0.15f,0.15f);
+               InitSurface(cone, "Cone", Color.grey);
+           }
 
+        }
+        void InitSurface(GameObject surface,string name,Color color)
+    {
+        if (surface.GetComponent<Collider>()) {
+            Destroy(surface.GetComponent<Collider>());
+        }
+        MeshCollider MC = surface.AddComponent<MeshCollider>();
+        MC.convex = true;
+        surface.layer = LayerMask.NameToLayer("virtual_surface");
+        surface.name = name;
+        //surface.transform.position = position;
+        surface.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Standard"));
+        surface.GetComponent<MeshRenderer>().material.color = new Color(color.r, color.g,color.b,0.3f) ;
+    }
         void GetFacingObject(){
             Ray ray = new Ray(Camera.main.transform.position,Camera.main.transform.forward);
             // LineRenderer lr = gameObject.GetComponent<LineRenderer>();
