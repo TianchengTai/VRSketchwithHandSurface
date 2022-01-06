@@ -9,6 +9,8 @@ public abstract class VRController:MonoBehaviour
 {
     public SteamVR_Behaviour_Pose pose;
 
+    public SteamVR_Behaviour_Pose left_pose;
+
     public SteamVR_Action_Single squeeze = SteamVR_Input.GetSingleAction("squeeze");
 
     public SteamVR_Action_Boolean InteractUI = SteamVR_Input.GetBooleanAction("InteractUI");

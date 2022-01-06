@@ -79,6 +79,7 @@ namespace VRPainting {
             SetTransparent();
             SetLock();
             SetPalette();
+            SetGenerateSurfacePanel();
         }
 
         // 根据输入设置透明度
@@ -97,9 +98,16 @@ namespace VRPainting {
         }
 
         private void SetPalette() {
-            if (DownPress.GetLastStateDown(pose.inputSource)) {
-                GameObject palette = transform.Find("PaletteCube").gameObject;
+            if (DownPress.GetLastStateDown(left_pose.inputSource)) {
+                GameObject palette = left_pose.transform.Find("PaletteCube").gameObject;
                 palette.SetActive(!palette.activeSelf);
+            }
+        }
+
+        private void SetGenerateSurfacePanel() {
+            if (DownPress.GetLastStateDown(pose.inputSource)) {
+                GameObject Panel = pose.transform.Find("GenerateSurfacePanelCube").gameObject;
+                Panel.SetActive(!Panel.activeSelf);
             }
         }
 
