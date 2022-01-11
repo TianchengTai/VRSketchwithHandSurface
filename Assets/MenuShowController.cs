@@ -96,6 +96,18 @@ public class MenuShowController : MonoBehaviour
         UndoRedoManager.Insert(new DrawCommand(surface));
         SelectModel.AddSurface(surface);
     }
+
+    public void genSphere(){
+        GameObject surface = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        GameObject camera = GameObject.Find("Main Camera");
+        surface.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        surface.transform.position= camera.transform.position+camera.transform.forward.normalized*0.5f;
+        InitSurface(surface, "shpere", Color.grey);
+        surface.transform.SetParent(GameObject.Find("Drawing Board").transform);
+        surface.layer = LayerMask.NameToLayer("hidden_surface");
+        UndoRedoManager.Insert(new DrawCommand(surface));
+        SelectModel.AddSurface(surface);
+    }
     void InitSurface(GameObject surface, string name, Color color)
     {
         if (surface.GetComponent<Collider>())

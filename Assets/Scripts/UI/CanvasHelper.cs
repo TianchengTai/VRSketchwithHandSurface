@@ -9,6 +9,8 @@ public class CanvasHelper : MonoBehaviour
 {
     public SteamVR_Behaviour_Pose pose;
 
+    public SteamVR_Behaviour_Pose left_pose;
+
     public SteamVR_Action_Boolean Menu = SteamVR_Input.GetBooleanAction("Menu");
 
     public SteamVR_Action_Boolean LeftBtn = SteamVR_Input.GetBooleanAction("SideBtn");
@@ -30,7 +32,7 @@ public class CanvasHelper : MonoBehaviour
         //        //GetComponent<GlobalState>().SetAction(ActionState.UI);
         //    }
         //}
-        if (LeftBtn.GetStateDown(pose.inputSource))
+        if (LeftBtn.GetStateDown(pose.inputSource)&&!LeftBtn.GetState(left_pose.inputSource))
         {
             GlobalState gs = GetComponent<GlobalState>();
             if(gs.action == ActionState.PAINT || (gs.action == ActionState.SURFACE&&(gs.surfaceMode == SurfaceMode.ONESTROKE||gs.surfaceMode==SurfaceMode.ROTATE)))
