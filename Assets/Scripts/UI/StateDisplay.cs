@@ -14,7 +14,7 @@ namespace VRPainting
         void Start()
         {
             text = GetComponent<Text>();
-            global = GameObject.Find("Canvas").GetComponent<GlobalState>();
+            global = GameObject.Find("Global State").GetComponent<GlobalState>();
         }
 
         // Update is called once per frame
@@ -24,7 +24,7 @@ namespace VRPainting
             string action = global.action.ToString();
             string mode = global.mode.ToString();
             string surfaceMode = global.surfaceMode.ToString();
-            text.text = $"当前操作:{action}\n绘图模式:{mode}\n表面模式:{surfaceMode}\nFPS:{fps.ToString("f2")}";
+            text.text = $"锟斤拷前锟斤拷锟斤拷:{action}\n锟斤拷图模式:{mode}\n锟斤拷锟斤拷模式:{surfaceMode}\nFPS:{fps.ToString("f2")}";
         }
     }
 

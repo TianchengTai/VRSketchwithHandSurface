@@ -32,6 +32,8 @@ public class DrawSurface : MonoBehaviour
     Vector3 palmDir;
     Vector3 wristPosition;
 
+    public bool autoAlignAndJoint;
+
     GestureType gesture = GestureType.none;
     //-----------------------------------------------------------------------------
 

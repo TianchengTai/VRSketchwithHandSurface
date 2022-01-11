@@ -35,7 +35,7 @@ namespace VRPainting
 
         public GameObject Draw(Vector3 position,GameObject plane=null)
         {
-            PaintingMode mode = GameObject.Find("Canvas").GetComponent<GlobalState>().mode;
+            PaintingMode mode = GameObject.Find("Global State").GetComponent<GlobalState>().mode;
             if (curr == null)
             {
                 GameObject point;
@@ -255,7 +255,7 @@ namespace VRPainting
         public void ClearCurr(out GameObject output,GameObject plane)
         {
             
-            PaintingMode mode = GameObject.Find("Canvas").GetComponent<GlobalState>().mode;
+            PaintingMode mode = GameObject.Find("Global State").GetComponent<GlobalState>().mode;
             output = curr;
             if (output == null) {
                 return;

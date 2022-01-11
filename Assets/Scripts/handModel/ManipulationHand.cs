@@ -222,6 +222,9 @@ public class ManipulationHand : MonoBehaviour
 
     // align and joint
     private void AutoAlignAndJoint(){
+        if (!GameObject.Find("Draw Surface").GetComponent<DrawSurface>().autoAlignAndJoint){
+            return;
+        }
         Collider[] hitColliders=new Collider[10];
         int no_Collider = Physics.OverlapSphereNonAlloc(transform.position, 0.15f, hitColliders,LayerMask.GetMask("hidden_surface"));
         if (hitColliders.Length>1){

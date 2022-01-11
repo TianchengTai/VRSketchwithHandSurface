@@ -19,7 +19,6 @@ namespace VRPainting
 
         private void Start()
         {
-            canvas = GameObject.Find("Canvas");
         }
 
         public void changeState(ActionState newState)

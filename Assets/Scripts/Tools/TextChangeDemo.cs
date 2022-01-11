@@ -14,7 +14,7 @@ namespace VRPainting
         // Update is called once per frame
         void Update()
         {
-            GlobalState gb = GameObject.Find("Canvas").GetComponent<GlobalState>();
+            GlobalState gb = GameObject.Find("Global State").GetComponent<GlobalState>();
             txtContent = gb.action.ToString();
             Text t = GetComponent<Text>();
             t.text = txtContent;
