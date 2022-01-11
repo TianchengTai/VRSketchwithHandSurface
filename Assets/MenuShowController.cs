@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using VRPainting;
+using CommandUndoRedo;
 public class MenuShowController : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -9,6 +10,8 @@ public class MenuShowController : MonoBehaviour
     private GameObject surfacePlane;
     private GameObject conePlane;
     private GameObject cylinderPlane;
+
+    public Material mat;
  
     void Start()
     { 
@@ -79,16 +82,19 @@ public class MenuShowController : MonoBehaviour
     }
     public void genSurfaceWithLeftTrigger(System.String mesh)
     {
-        GameObject cone = new GameObject();
-        MeshFilter mf = cone.AddComponent<MeshFilter>();
+        GameObject surface = new GameObject();
+        MeshFilter mf = surface.AddComponent<MeshFilter>();
         Debug.Log("Assets/Resources/" + mesh + ".asset");
         mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/"+mesh+".asset");
-        cone.AddComponent<MeshRenderer>();
-        cone.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
+        surface.AddComponent<MeshRenderer>();
+        surface.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
         GameObject camera = GameObject.Find("Main Camera");
-        cone.transform.position= camera.transform.position+(camera.transform.forward+ 0.5f*camera.transform.right-0.5f*camera.transform.up).normalized;
-        InitSurface(cone, mesh, Color.grey);
-
+        surface.transform.position= camera.transform.position+camera.transform.forward.normalized*0.5f;
+        InitSurface(surface, mesh, Color.grey);
+        surface.transform.SetParent(GameObject.Find("Drawing Board").transform);
+        surface.layer = LayerMask.NameToLayer("hidden_surface");
+        UndoRedoManager.Insert(new DrawCommand(surface));
+        SelectModel.AddSurface(surface);
     }
     void InitSurface(GameObject surface, string name, Color color)
     {
@@ -98,10 +104,12 @@ public class MenuShowController : MonoBehaviour
         }
         MeshCollider MC = surface.AddComponent<MeshCollider>();
         MC.convex = true;
-        //surface.layer = LayerMask.NameToLayer("virtual_surface");
+        surface.layer = LayerMask.NameToLayer("virtual_surface");
         surface.name = name;
         //surface.transform.position = position;
-        surface.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Standard"));
+        surface.GetComponent<MeshRenderer>().material = mat;
         surface.GetComponent<MeshRenderer>().material.color = new Color(color.r, color.g, color.b, 0.3f);
     }
+
+    
 }

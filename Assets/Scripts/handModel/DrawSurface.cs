@@ -309,17 +309,17 @@ public class DrawSurface : MonoBehaviour
         MeshFilter mf = cone.AddComponent<MeshFilter>();
         float angle = Vector3.Angle(indexJoints[0] - indexJoints[1], indexJoints[1] - indexJoints[3]);
         if (angle < 20) {
-            mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/bakedMesh1.asset");
+            mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/Qumian1.asset");
         }
         else if (angle < 40) {
-            mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/bakedMesh2.asset");
+            mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/Qumian2.asset");
         }
         else if (angle < 60) {
-            mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/bakedMesh3.asset");
+            mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/Qumian3.asset");
 
         }
         else {
-            mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/bakedMesh4.asset");
+            mf.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Resources/Qumian4.asset");
         }
         cone.AddComponent<MeshRenderer>();
         cone.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);

@@ -288,7 +288,7 @@ namespace VRPainting {
 
         bool isClick() {
             if (useVR)
-                if (squeeze.axis > 0.3) {
+                if (InteractUI.GetState(pose.inputSource)) {
                     return true;
                 }
                 else {
@@ -309,7 +309,7 @@ namespace VRPainting {
 
         bool isLoosen() {
             if (useVR)
-                if (squeeze.axis < 0.1) {
+                if (!InteractUI.GetState(pose.inputSource)) {
                     return true;
                 }
                 else {
