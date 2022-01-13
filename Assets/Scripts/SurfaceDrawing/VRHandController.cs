@@ -9,8 +9,10 @@ using System;
 using Leap.Unity.Interaction;
 using Valve.VR.Extras;
 
-namespace VRPainting {
-    public class VRHandController : VRController {
+namespace VRPainting
+{
+    public class VRHandController : VRController
+    {
 
         public SteamVR_Action_Boolean LeftPress = SteamVR_Input.GetBooleanAction("SnapTurnLeft");
 
@@ -37,7 +39,8 @@ namespace VRPainting {
         string VirtualLayer = "virtual_surface";
 
         // Start is called before the first frame update
-        void Start() {
+        void Start()
+        {
             lineInfo = new LineInfo();
             SetDist();
             global = GameObject.Find("Canvas").GetComponent<GlobalState>();
@@ -47,35 +50,57 @@ namespace VRPainting {
         }
 
 
-        void Update() {
+        void Update()
+        {
             HandleUndoRedo();
             //MouseFollow();
             ControllerFollow();
             UpdateLineInfo();
             PointerHighlight();
             SetUI();
-
-            if (global.action == ActionState.PAINT) {
+            if (!JudgeUI())
+            {
+                return;
+            }
+            if (global.action == ActionState.PAINT)
+            {
                 DrawOneLine();
             }
-            else if (global.action == ActionState.UI) {
+            else if (global.action == ActionState.UI)
+            {
 
             }
-            else if (global.action == ActionState.FREE) {
+            else if (global.action == ActionState.FREE)
+            {
 
             }
-            else if (global.action == ActionState.DELETE) {
+            else if (global.action == ActionState.DELETE)
+            {
                 DeleteLine(ControllerPosition);
             }
         }
 
         // 光束的长度
-        private void SetDist() {
-            SteamVR_LaserPointer slp = GetComponent< SteamVR_LaserPointer>();
+        private void SetDist()
+        {
+            SteamVR_LaserPointer slp = GetComponent<SteamVR_LaserPointer>();
             dist = slp.dist;
         }
 
-        private void SetUI() {
+        private bool JudgeUI()
+        {
+            if (left_pose.transform.Find("PaletteCube").gameObject.activeSelf)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private void SetUI()
+        {
             SetTransparent();
             SetLock();
             SetPalette();
@@ -83,29 +108,37 @@ namespace VRPainting {
         }
 
         // 根据输入设置透明度
-        private void SetTransparent() {
-            if(menu.GetStateDown(pose.inputSource))
+        private void SetTransparent()
+        {
+            if (menu.GetStateDown(pose.inputSource))
                 selectModel.transparent = !selectModel.transparent;
         }
 
-        private void SetLock() {
-            if (UpPress.GetStateDown(pose.inputSource)) {
-                if (hitObject != null) {
+        private void SetLock()
+        {
+            if (UpPress.GetStateDown(pose.inputSource))
+            {
+                if (hitObject != null)
+                {
                     ManipulationHand MH = hitObject.GetComponent<ManipulationHand>();
                     MH.enabled = !MH.enabled;
                 }
             }
         }
 
-        private void SetPalette() {
-            if (DownPress.GetLastStateDown(left_pose.inputSource)) {
+        private void SetPalette()
+        {
+            if (DownPress.GetLastStateDown(left_pose.inputSource))
+            {
                 GameObject palette = left_pose.transform.Find("PaletteCube").gameObject;
                 palette.SetActive(!palette.activeSelf);
             }
         }
 
-        private void SetGenerateSurfacePanel() {
-            if (DownPress.GetLastStateDown(pose.inputSource)) {
+        private void SetGenerateSurfacePanel()
+        {
+            if (DownPress.GetLastStateDown(pose.inputSource))
+            {
                 GameObject Panel = pose.transform.Find("GenerateSurfacePanelCube").gameObject;
                 Panel.SetActive(!Panel.activeSelf);
             }
@@ -137,8 +170,10 @@ namespace VRPainting {
 
         private bool judgePoint = true;
 
-        GameObject DrawOneLine() {
-            if (isClick()) {
+        GameObject DrawOneLine()
+        {
+            if (isClick())
+            {
                 if (judgePoint)
                     FirstPoint();
                 else
@@ -150,7 +185,8 @@ namespace VRPainting {
         }
 
 
-        private GameObject FinishPaint() {
+        private GameObject FinishPaint()
+        {
             GameObject output;
             strokeModel.ClearCurr(out output, selectModel.Target);
             if (selectModel.Target != null)
@@ -159,11 +195,13 @@ namespace VRPainting {
             return output;
         }
 
-        private void RestPoint() {
-            if (selectModel.Target != null) {
+        private void RestPoint()
+        {
+            if (selectModel.Target != null)
+            {
                 Ray controllerRay = new Ray(transform.position, transform.forward);
                 RaycastHit hitInfo;
-                bool bHit = Physics.Raycast(controllerRay, out hitInfo, dist, LayerMask.GetMask(HiddenLayer),QueryTriggerInteraction.Ignore);
+                bool bHit = Physics.Raycast(controllerRay, out hitInfo, dist, LayerMask.GetMask(HiddenLayer), QueryTriggerInteraction.Ignore);
                 if (bHit)
                     strokeModel.Draw(hitInfo.point, selectModel.Target);
             }
@@ -171,13 +209,16 @@ namespace VRPainting {
                 strokeModel.Draw(ControllerPosition);
         }
 
-        private void FirstPoint() {
-            if (hit) {
-                if (hitObject.layer == LayerMask.NameToLayer(VirtualLayer)) {
+        private void FirstPoint()
+        {
+            if (hit)
+            {
+                if (hitObject.layer == LayerMask.NameToLayer(VirtualLayer))
+                {
                     GameObject.Find("Draw Surface").GetComponent<DrawSurface>().FinishSurface();
                 }
                 SelectAndHighlight();
-                
+
                 strokeModel.Draw(TargetPosition, selectModel.Target);
             }
             else
@@ -185,7 +226,8 @@ namespace VRPainting {
             judgePoint = false;
         }
 
-        public void Delete() {
+        public void Delete()
+        {
             if (hit)
                 DeleteLine(TargetPosition);
             else
@@ -194,10 +236,13 @@ namespace VRPainting {
 
 
 
-        public void DeleteLine(Vector3 position) {
-            if (singleClick()) {
+        public void DeleteLine(Vector3 position)
+        {
+            if (singleClick())
+            {
                 Collider[] colliders = Physics.OverlapSphere(position, deleteDistance, LayerMask.GetMask("line"));
-                if (colliders.Length > 0) {
+                if (colliders.Length > 0)
+                {
                     UndoRedoManager.Insert(new DeleteCommand(colliders[0].gameObject));
                     colliders[0].gameObject.SetActive(false);
                 }
@@ -207,8 +252,10 @@ namespace VRPainting {
 
 
 
-        void SelectAndHighlight() {
-            if (hitObject != null && selectModel.Target == null) {
+        void SelectAndHighlight()
+        {
+            if (hitObject != null && selectModel.Target == null)
+            {
                 selectModel.SetTarget(hitObject);
                 selectModel.SetMaterial();
 
@@ -217,21 +264,26 @@ namespace VRPainting {
         }
 
 
-        void PointerHighlight() {
+        void PointerHighlight()
+        {
             selectModel.SetMaterial();
-            if (hitObject != null) {
+            if (hitObject != null)
+            {
                 selectModel.HighlightGameObject(hitObject);
             }
         }
 
 
-        void HandleUndoRedo() {
+        void HandleUndoRedo()
+        {
             if (maxUndoStored != UndoRedoManager.maxUndoStored) { UndoRedoManager.maxUndoStored = maxUndoStored; }
 
-            if (LeftPress.GetStateDown(pose.inputSource)) {
+            if (LeftPress.GetStateDown(pose.inputSource))
+            {
                 UndoRedoManager.Undo();
             }
-            if (RightPress.GetStateDown(pose.inputSource)) {
+            if (RightPress.GetStateDown(pose.inputSource))
+            {
                 UndoRedoManager.Redo();
             }
         }
@@ -239,29 +291,34 @@ namespace VRPainting {
 
 
 
-        void UpdateLineInfo() {
+        void UpdateLineInfo()
+        {
             lineInfo.width = slider.value;
             lineInfo.color = colorBar.color;
         }
 
-        void ControllerFollow() {
+        void ControllerFollow()
+        {
             ControllerPosition = transform.position + transform.forward * dist;
             Ray raycast = new Ray(transform.position, transform.forward);
             RaycastHit hit;
-            bool bHit = Physics.Raycast(raycast, out hit, dist,LayerMask.GetMask(HiddenLayer,VirtualLayer),QueryTriggerInteraction.Ignore);
-            if (bHit) {
+            bool bHit = Physics.Raycast(raycast, out hit, dist, LayerMask.GetMask(HiddenLayer, VirtualLayer), QueryTriggerInteraction.Ignore);
+            if (bHit)
+            {
                 hitObject = hit.transform.gameObject;
                 TargetPosition = hit.point;
                 this.hit = true;
             }
-            else {
+            else
+            {
                 hitObject = null;
                 //TargetPosition = transform.position+transform.forward*dist;
                 this.hit = false;
             }
         }
 
-        void MouseFollow() {
+        void MouseFollow()
+        {
 
             //获取鼠标在相机中（世界中）的位置，转换为屏幕坐标；
 
@@ -275,23 +332,28 @@ namespace VRPainting {
             Ray ray = Camera.main.ScreenPointToRay(mousePositionOnScreen);
             RaycastHit hit;//
 
-            if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask(SelectedLayer))) {
+            if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask(SelectedLayer)))
+            {
                 mousePositionInWorld = hit.point;
                 this.hit = true;
             }
-            else {
+            else
+            {
                 this.hit = false;
             }
 
         }
 
 
-        bool isClick() {
+        bool isClick()
+        {
             if (useVR)
-                if (InteractUI.GetState(pose.inputSource)) {
+                if (InteractUI.GetState(pose.inputSource))
+                {
                     return true;
                 }
-                else {
+                else
+                {
                     return false;
                 }
             else
@@ -299,7 +361,8 @@ namespace VRPainting {
         }
 
 
-        bool singleClick() {
+        bool singleClick()
+        {
             if (useVR)
                 return InteractUI.GetStateDown(pose.inputSource);
             else
@@ -307,19 +370,23 @@ namespace VRPainting {
         }
 
 
-        bool isLoosen() {
+        bool isLoosen()
+        {
             if (useVR)
-                if (!InteractUI.GetState(pose.inputSource)) {
+                if (!InteractUI.GetState(pose.inputSource))
+                {
                     return true;
                 }
-                else {
+                else
+                {
                     return false;
                 }
             else
                 return !Input.GetMouseButton(0);
         }
 
-        bool Loosen() {
+        bool Loosen()
+        {
             if (useVR)
                 return InteractUI.GetStateUp(pose.inputSource);
             else
